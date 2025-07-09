@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
@@ -35,12 +35,14 @@ async function jobRunner(dataSource) {
 }
 
 mongoose.connection.once('open', async () => {
-  await loadAndScheduleJobs(jobRunner);
+  await loadAndScheduleJobs();
   console.log('Scheduler loaded');
 });
 
 // Routes placeholder
 app.use('/api/datasources', require('./routes/datasource'));
+app.use('/api/transformers', require('./routes/customTransformer'));
+app.use('/api/jobs', require('./routes/jobs'));
 
 app.get('/', (req, res) => {
   res.send('FlexiScrapper Backend Running');
